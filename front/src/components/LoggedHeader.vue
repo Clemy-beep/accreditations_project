@@ -20,16 +20,6 @@
     </nav>
   </header>
 </template>
-<script>
-export default {
-  created() {
-    sessionStorage.clear();
-  },
-  unmounted() {
-    sessionStorage.clear();
-  },
-};
-</script>
 <style scoped>
 * {
   color: white;

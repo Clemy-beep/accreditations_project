@@ -1,10 +1,10 @@
 <template>
   <footer>
     <nav>
-      <router-link to="/about">About</router-link>
-      <router-link to="/moderation-rules">Moderator Rules</router-link>
+      <router-link to="/about">A propos</router-link>
+      <router-link to="/moderation-rules">Règles de modération</router-link>
       <router-link to="/contact">Contact</router-link>
-      <router-link to="/Terms of Use">ToU</router-link>
+      <router-link to="/Terms of Use">CU</router-link>
     </nav>
   </footer>
 </template>
@@ -31,14 +31,12 @@ nav a.router-link-exact-active {
 }
 
 footer {
-  margin: -6px;
+  margin: 0;
   height: 80px;
   background-color: white;
   box-shadow: 0px -1px 6px 0px #00000025;
-  width: 99.3vw;
   text-align: right;
-  overflow-x: clip;
-  overflow-y: clip;
+  display: block;
 }
 
 @media (max-width: 650px) {

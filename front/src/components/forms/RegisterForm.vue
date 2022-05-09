@@ -23,8 +23,15 @@
         <span class="material-symbols-outlined reg-icon"> person_add </span>
         Créer un compte
       </h1>
+      <span class="login"
+        >Déjà un compte ?
+        <router-link to="/login">Connectez vous !</router-link></span
+      >
       <div id="response" v-if="response !== ''">{{ response }}</div>
-      <div id="success" v-if="success !== ''">{{ success }}</div>
+      <div id="success" v-if="success === true">
+        Création de compte réussie ! Vous pouvez désormais vous
+        <router-link to="/login">connecter</router-link> à votre compte.
+      </div>
       <div id="form">
         <div>
           <label for="email">Email</label>
@@ -119,19 +126,19 @@ export default {
       user: {},
       url: "",
       response: "",
-      success: "",
+      success: false,
     };
   },
   methods: {
     onFileChange(e) {
       const file = e.target.files[0];
       this.url = URL.createObjectURL(file);
-      console.log(this.url);
       const avatar = this.$refs.avatar.files[0];
       this.user.avatar = avatar;
-      console.log(this.user.avatar);
     },
     handleSubmit: async function () {
+      this.error = "";
+      this.success = false;
       console.log(this.user);
       if (
         !(
@@ -148,6 +155,10 @@ export default {
         this.response = "Tous les champs doivent être remplis.";
         return;
       }
+      if (!this.validateEmail(this.user.email)) {
+        this.response = "Merci de rentrer un email valide.";
+        return;
+      }
       if (this.user.role === "MODERATOR") {
         const ok = await this.$refs.confirmDialog.show({
           title: "Compte Modérateur",
@@ -157,6 +168,7 @@ export default {
         });
         if (!ok) return;
         this.createAccount();
+        return;
       }
       this.createAccount();
     },
@@ -170,7 +182,7 @@ export default {
       formData.append("avatar", this.user.avatar);
       formData.append("dateOfBirth", this.user.dateOfBirth);
       formData.append("role", this.user.role);
-      let res = await fetch("http://localhost:3000/register", {
+      let res = await fetch("http://localhost:3000/api/register", {
         method: "POST",
         body: formData,
       })
@@ -180,22 +192,38 @@ export default {
           console.log(e);
         });
       if (res.error) {
-        this.response = this.res.error.message;
+        this.response = res.message;
         return;
       }
-      this.success = `Création de compte réussie ! Vous pouvez désormais vous <router-link to="/login" style="color:black">connecter</router-link> à votre compte.`;
+
+      this.success = true;
+    },
+    validateEmail: function (email) {
+      var re =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email);
     },
   },
 };
 </script>
 
 <style scoped>
+.login {
+  font-family: "Montserrat", sans-serif;
+  margin-bottom: 1em;
+}
+.login a {
+  font-weight: 600;
+  color: #9461ff;
+  text-decoration: none;
+}
 #form-side {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 30%;
+  max-width: 432px;
 }
 #avatar-input {
   display: flex;
@@ -243,7 +271,7 @@ form {
   justify-content: center;
   align-items: center;
   margin-top: 32px;
-  gap: 3em;
+  gap: 5em;
   margin-bottom: 32px;
 }
 
@@ -298,7 +326,21 @@ select {
   font-family: "Montserrat", sans-serif;
 }
 
+#success {
+  font-family: "Montserrat", sans-serif;
+}
+
+#success a {
+  font-weight: 500;
+  color: #9461ff;
+  text-decoration: none;
+}
+
 @media (max-width: 980px) {
+  #form-side {
+    width: 70vw;
+    margin: 0 auto;
+  }
   form {
     flex-direction: column-reverse;
     align-items: center;
@@ -312,10 +354,7 @@ select {
     width: 300px;
     height: 300px;
   }
-  form {
-    width: 70vw;
-    margin: 0 auto;
-  }
+
   h1 {
     font-size: 20px;
     line-height: 64px;

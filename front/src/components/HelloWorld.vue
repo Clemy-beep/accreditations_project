@@ -49,8 +49,7 @@ export default {
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
-  height: calc(100vh - 152px);
-  margin: -8px;
+  height: calc(100vh - 170px);
 }
 h1 {
   font-family: "Popins", sans-serif;

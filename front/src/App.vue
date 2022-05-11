@@ -5,11 +5,12 @@
 
 <script>
 import FooterComponent from "@/components/FooterComponent.vue";
-export default {
+import { defineComponent } from "vue";
+export default defineComponent({
   components: {
     FooterComponent,
   },
-};
+});
 </script>
 <style>
 body {
@@ -23,7 +24,7 @@ body {
   text-align: center;
   color: #2c3e50;
   display: grid;
-  min-height: calc(100vh - 2px);
+  min-height: calc(100vh - 3px);
   grid-template-rows: auto 1fr auto;
   align-items: center;
 }

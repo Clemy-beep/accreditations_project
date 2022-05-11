@@ -20,15 +20,12 @@
     </nav>
   </header>
 </template>
-<script>
-export default {
-  created() {
-    sessionStorage.clear();
-  },
-  unmounted() {
-    sessionStorage.clear();
-  },
-};
+<script setup>
+import { onMounted } from "vue";
+
+onMounted(() => {
+  localStorage.clear();
+});
 </script>
 <style scoped>
 * {

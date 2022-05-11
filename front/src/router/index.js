@@ -1,11 +1,11 @@
+import LandingView from "@/views/LandingView.vue";
 import { createRouter, createWebHashHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
 
 const routes = [
   {
     path: "/",
-    name: "home",
-    component: HomeView,
+    name: "landing",
+    component: LandingView,
   },
   {
     path: "/login",
@@ -21,6 +21,18 @@ const routes = [
     name: "register",
     component: () =>
       import(/* webpackChunkName: "login" */ "../views/RegisterView.vue"),
+  },
+  {
+    path: "/about",
+    name: "about",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
+  },
+  {
+    path: "/home",
+    name: "home",
+    component: () =>
+      import(/* webpackChunkName: "home" */ "../views/HomeView.vue"),
   },
 ];
 

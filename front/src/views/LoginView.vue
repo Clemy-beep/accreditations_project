@@ -5,12 +5,13 @@
 <script>
 import UnloggedHeader from "@/components/UnloggedHeader.vue";
 import LoginForm from "@/components/forms/LoginForm.vue";
-export default {
+import { defineComponent } from "vue";
+export default defineComponent({
   components: {
     UnloggedHeader,
     LoginForm,
   },
-};
+});
 </script>
 
 <style scoped>

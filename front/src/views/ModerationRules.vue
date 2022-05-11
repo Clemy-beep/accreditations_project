@@ -1,15 +1,13 @@
 <template>
-  <LoggedHeader />
-  <div>
-    <h1>Hello</h1>
-  </div>
+  <UnloggedHeader />
+  <div></div>
 </template>
 <script>
+import UnloggedHeader from "@/components/UnloggedHeader.vue";
 import { defineComponent } from "vue";
-import LoggedHeader from "@/components/LoggedHeader.vue";
 export default defineComponent({
   components: {
-    LoggedHeader,
+    UnloggedHeader,
   },
 });
 </script>

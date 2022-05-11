@@ -31,7 +31,6 @@ nav a.router-link-exact-active {
 }
 
 footer {
-  margin: 0;
   height: 80px;
   background-color: white;
   box-shadow: 0px -1px 6px 0px #00000025;

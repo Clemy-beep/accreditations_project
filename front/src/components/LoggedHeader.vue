@@ -7,26 +7,61 @@
       </h1>
     </div>
     <nav>
-      <router-link to="/login" id="login-text">Connexion</router-link>
-      <router-link to="/login" id="small-screen-login"
-        ><span class="material-symbols-outlined"> login </span>
+      <router-link to="/submit-pin" id="submit-text"
+        >Publier une fiche</router-link
+      >
+      <router-link to="/submit-pin" id="small-screen-submit"
+        ><span class="material-symbols-outlined"> post_add </span>
       </router-link>
-      <router-link to="/register" id="register-text">Inscription</router-link>
-      <router-link to="/register" id="small-screen-register"
+      <router-link
+        to="/moderate"
+        v-if="user.role.toString() == 'MODERATOR'"
+        id="modo-text"
+        >Modération</router-link
+      >
+      <router-link
+        v-if="user.role === 'MODERATOR'"
+        to="/moderate"
+        id="small-screen-moderate"
+        ><span class="material-symbols-outlined"> shield </span></router-link
+      >
+      <router-link id="admin-text" to="/admin" v-if="user.role === 'ADMIN'"
+        >Admin</router-link
+      >
+      <router-link
+        to="/admin"
+        v-if="user.role === 'ADMIN'"
+        id="small-screen-admin"
         ><span class="material-symbols-outlined">
-          person_add
+          admin_panel_settings
         </span></router-link
       >
     </nav>
   </header>
 </template>
+<script setup>
+import { userStore } from "@/stores/userStore";
+import { useRouter } from "vue-router";
+
+const store = userStore();
+const router = useRouter();
+var user = {};
+console.log(store.$state);
+
+if (!store.$state.user.id || !localStorage.getItem("token")) {
+  router.push("/");
+}
+user = store.$state.user;
+console.log(user.role.toString());
+</script>
 <style scoped>
 * {
   color: white;
 }
 
-#small-screen-register,
-#small-screen-login {
+#small-screen-moderate,
+#small-screen-submit,
+#small-screen-admin {
   display: none;
 }
 header {
@@ -105,12 +140,14 @@ nav a.router-link-exact-active {
   h1 {
     font-size: 16px;
   }
-  #small-screen-register,
-  #small-screen-login {
+  #small-screen-admin,
+  #small-screen-modo,
+  #small-screen-submit {
     display: inline;
   }
-  #login-text,
-  #register-text {
+  #modo-text,
+  #admin-text,
+  #submit-text {
     display: none;
   }
 }

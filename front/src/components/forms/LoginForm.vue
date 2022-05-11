@@ -42,12 +42,20 @@
 
 <script>
 import PrimaryButton from "@/components/PrimaryButton.vue";
-export default {
+import { userStore } from "@/stores/userStore";
+import { mapWritableState } from "pinia";
+import { defineComponent } from "vue";
+export default defineComponent({
   data() {
     return {
       user: {},
       response: "",
     };
+  },
+  computed: {
+    ...mapWritableState(userStore, {
+      setUser: "user",
+    }),
   },
   components: {
     PrimaryButton,
@@ -81,13 +89,15 @@ export default {
         this.response = "Une erreur s'est produite, connexion impossible";
         return;
       }
-      sessionStorage.setItem("token", res.token);
+      this.setUser = res.user;
+      localStorage.setItem("token", res.token);
+      this.$router.push("/home");
     },
     emptyRes: function () {
       this.response = "";
     },
   },
-};
+});
 </script>
 
 <style scoped>
@@ -122,7 +132,7 @@ h2 {
   background-size: cover;
   background-position: center;
   box-shadow: inset 0px 0px 25px 30px #ffffff;
-  min-height: 75%;
+  min-height: 80%;
   margin: 0 auto;
   aspect-ratio: 16/9;
   max-height: 500px;
@@ -137,7 +147,7 @@ form {
   display: flex;
   flex-direction: column;
   gap: 1em;
-  margin: 10% auto;
+  margin: 6% auto;
 }
 label {
   display: block;

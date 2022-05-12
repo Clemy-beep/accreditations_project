@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import FooterComponent from "@/components/FooterComponent.vue";
+import FooterComponent from "@/components/visual-components/FooterComponent.vue";
 import { defineComponent } from "vue";
 export default defineComponent({
   components: {

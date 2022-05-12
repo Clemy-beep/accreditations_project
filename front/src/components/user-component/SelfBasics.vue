@@ -1,22 +1,23 @@
 <template>
-  <LoggedHeader />
   <div>
-    <h1>Hello</h1>
-    <img :src="imageURL" alt="avatar" />
+    <img :src="imgURL" alt="avatar" id="avatar" />
+    <div>
+      <h1>{{ user.username }}</h1>
+      <p>{{ user.followersCount }} followers</p>
+    </div>
+    <BadgeComponent />
   </div>
 </template>
+
 <script>
-import { defineComponent } from "vue";
-import LoggedHeader from "@/components/LoggedHeader.vue";
-import { mapActions, mapState } from "pinia";
 import { userStore } from "@/stores/userStore";
-export default defineComponent({
-  components: {
-    LoggedHeader,
-  },
+import { mapActions, mapState } from "pinia";
+
+export default {
   data() {
     return {
       imageURL: "",
+      user: {},
     };
   },
   computed: {
@@ -30,12 +31,13 @@ export default defineComponent({
   },
   created() {
     this.getimg();
+    this.user = this.currentUser || this.fetcheUser();
   },
   methods: {
-    ...mapActions(userStore, ["fetchAvatar"]),
+    ...mapActions(userStore, ["fetchAvatar", "fetchUser"]),
     getimg: async function () {
       this.imageURL = await this.fetchAvatar(this.currentUser.id);
     },
   },
-});
+};
 </script>

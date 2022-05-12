@@ -31,8 +31,8 @@
 </template>
 
 <script>
-import SecondaryButton from "@/components/SecondaryButton.vue";
-import PrimaryButton from "@/components/PrimaryButton.vue";
+import SecondaryButton from "@/components/visual-components/SecondaryButton.vue";
+import PrimaryButton from "@/components/visual-components/PrimaryButton.vue";
 export default {
   name: "HelloWorld",
   components: {

@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import PrimaryButton from "@/components/PrimaryButton.vue";
+import PrimaryButton from "@/components/visual-components/PrimaryButton.vue";
 import { userStore } from "@/stores/userStore";
 import { mapWritableState } from "pinia";
 import { defineComponent } from "vue";
@@ -91,10 +91,8 @@ export default defineComponent({
       }
       this.setUser = res.user;
       localStorage.setItem("token", res.token);
+      localStorage.setItem("id", res.user.id);
       this.$router.push("/home");
-    },
-    emptyRes: function () {
-      this.response = "";
     },
   },
 });

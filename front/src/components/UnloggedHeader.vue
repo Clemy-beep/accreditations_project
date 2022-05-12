@@ -21,10 +21,13 @@
   </header>
 </template>
 <script setup>
+import { userStore } from "@/stores/userStore";
 import { onMounted } from "vue";
 
+const store = userStore();
 onMounted(() => {
   localStorage.clear();
+  store.$reset();
 });
 </script>
 <style scoped>

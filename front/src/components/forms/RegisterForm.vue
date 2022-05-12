@@ -114,8 +114,8 @@
   </teleport>
 </template>
 <script>
-import PrimaryButton from "@/components/PrimaryButton.vue";
-import ConfirmDialog from "@/components/ConfirmDialog.vue";
+import PrimaryButton from "@/components/visual-components/PrimaryButton.vue";
+import ConfirmDialog from "@/components/visual-components/ConfirmDialog.vue";
 export default {
   components: {
     PrimaryButton,

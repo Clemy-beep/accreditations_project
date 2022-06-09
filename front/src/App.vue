@@ -18,7 +18,6 @@ body {
   padding: 0;
 }
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -40,5 +39,14 @@ nav {
 nav a {
   font-weight: bold;
   color: #2c3e50;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Montserrat", sans-serif;
+}
+p {
+  font-family: "Poppins", sans-serif;
 }
 </style>

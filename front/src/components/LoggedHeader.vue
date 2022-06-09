@@ -57,7 +57,15 @@
 
         <router-link id="profile-text" to="/profile">Profil</router-link>
 
-        <router-link id="logout-text" to="/">Déconnexion</router-link>
+        <router-link id="logout-text" to="/">
+          Déconnexion
+          <span
+            class="material-symbols-outlined"
+            style="vertical-align: middle"
+          >
+            logout
+          </span></router-link
+        >
       </div>
     </nav>
   </header>
@@ -68,15 +76,13 @@ import { useRouter } from "vue-router";
 
 const store = userStore();
 const router = useRouter();
-var user = {};
 console.log(store.$state);
 
 if (!store.$state.user.id || !localStorage.getItem("token")) {
-  alert("Merci de vous reconnecter.");
+  console.log(store.$state.user);
   router.push("/");
 }
-user = store.$state.user;
-console.log(user.role.toString());
+const user = store.$state.user;
 </script>
 <style scoped>
 * {

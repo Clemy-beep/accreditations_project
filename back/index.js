@@ -25,7 +25,6 @@ app.use("/api/", authentication);
 app.use("/api/", users);
 
 app.get("/api/user/:id/avatar", auth, async(req, res) => {
-    console.log("hey");
     const avatar = await prisma.user.findUnique({
         where: {
             id: parseInt(req.params.id),

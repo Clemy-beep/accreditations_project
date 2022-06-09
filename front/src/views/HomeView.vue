@@ -22,7 +22,6 @@ export default defineComponent({
   computed: {
     ...mapState(userStore, {
       getUser: "user",
-      getId: "id",
     }),
     currentUser() {
       return this.getUser;

@@ -25,14 +25,12 @@ export default {
   },
   created() {
     this.getFollowees();
+    this.followees = this.currentUser.followedAccounts;
   },
   methods: {
     ...mapActions(userStore, ["fetchFollowedAccounts"]),
     getFollowees: async function () {
-      this.currentUser.followedAccounts = await this.fetchFollowedAccounts(
-        this.currentUser.id
-      );
-      this.followees = this.currentUser.followedAccounts;
+      await this.fetchFollowedAccounts(this.currentUser.id);
     },
   },
 };

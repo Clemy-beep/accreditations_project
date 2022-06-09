@@ -65,7 +65,7 @@ export const userStore = defineStore({
                 .then((r) => r.json())
                 .catch((err) => console.error(err));
             if (!res) throw new Error("Followed accounts not found");
-            return res.users;
+            this.user.followedAccounts = res.users;
         },
     },
 });

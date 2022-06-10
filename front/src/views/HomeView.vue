@@ -2,7 +2,6 @@
   <LoggedHeader />
   <div>
     <h1>Hello</h1>
-    <img :src="imageURL" alt="avatar" />
   </div>
 </template>
 <script>

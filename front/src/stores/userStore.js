@@ -5,8 +5,10 @@ export const userStore = defineStore({
     id: "user",
     state: () => ({
         user: {},
+        followers: [],
     }),
     persist: true,
+
     actions: {
         fetchAvatar: async function(userId) {
             if (userId) {
@@ -49,11 +51,11 @@ export const userStore = defineStore({
                 .then((r) => r.json())
                 .catch((e) => console.log(e));
             if (!res) throw new Error("Followers not found");
-            this.user.followers = res.followers;
+            this.followers = res.followers;
             this.user.followersNum = res.followers.length;
         },
         fetchFollowedAccounts: async function(userId) {
-            if (this.user.followedAccounts) return;
+            if (this.user.followees) return;
             if (!userId) throw new Error("User Id not found");
             const res = await fetch(
                     `http://localhost:3000/api/user/${userId}/followed-accounts`, {
@@ -65,7 +67,16 @@ export const userStore = defineStore({
                 .then((r) => r.json())
                 .catch((err) => console.error(err));
             if (!res) throw new Error("Followed accounts not found");
-            this.user.followedAccounts = res.users;
+            console.log(res);
+
+            this.user.followees = res.users;
+        },
+        fetchFolloweesAvatars: async function() {
+            await this.user.followees.forEach((followee) => {
+                this.fetchAvatar(followee.id).then((avatar) => {
+                    followee.avatar = avatar;
+                });
+            });
         },
     },
 });

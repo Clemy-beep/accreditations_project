@@ -24,11 +24,8 @@ router.get("/user/:id/followed-accounts", auth, async(req, res) => {
         select: {
             id: true,
             username: true,
-            avatar: true,
         },
     });
-    if (users.length === 0)
-        return res.status(200).json({ message: "No users found." });
     res.status(200).json({ users });
 });
 router.get("/user/:id", auth, async(req, res) => {
@@ -61,4 +58,19 @@ router.get("/user/:id/followers", auth, async(req, res) => {
     res.status(200).json({ followers });
 });
 
+router.get("/user/:id/avatar", auth, async(req, res) => {
+    const avatar = await prisma.user.findUnique({
+        where: {
+            id: parseInt(req.params.id),
+        },
+        select: {
+            avatar: true,
+        },
+    });
+    res
+        .type("jpeg")
+        .sendFile(
+            `/home/clemy/Documents/accreditations_project/back/uploads/avatars/${avatar.avatar}`
+        );
+});
 module.exports = router;

@@ -1,7 +1,15 @@
 <template>
-  <h1>Your followed accounts</h1>
-  <span>en voir plus</span>
-  <div id="followees-list" v-for="followee in followees" :key="followee.id">
+  <div>
+    <h1>
+      <span class="material-symbols-outlined"> badge </span> Vos abonnements
+    </h1>
+    <span id="followees-list-link">en voir plus</span>
+  </div>
+  <div
+    id="followees-list"
+    v-for="followee in user.followees"
+    :key="followee.id"
+  >
     <h2>{{ followee.username }}</h2>
   </div>
 </template>
@@ -12,7 +20,7 @@ import { mapActions, mapState } from "pinia";
 export default {
   data() {
     return {
-      followees: [],
+      user: {},
     };
   },
   computed: {
@@ -25,13 +33,26 @@ export default {
   },
   created() {
     this.getFollowees();
-    this.followees = this.currentUser.followedAccounts;
+    this.user = this.currentUser;
   },
+
   methods: {
     ...mapActions(userStore, ["fetchFollowedAccounts"]),
     getFollowees: async function () {
-      await this.fetchFollowedAccounts(this.currentUser.id);
+      this.fetchFollowedAccounts(this.currentUser.id);
     },
   },
 };
 </script>
+
+<style scoped>
+#followees-list-link {
+  font-family: Poppins, sans-serif;
+  font-weight: 500;
+  color: #9461ff;
+}
+
+h1 {
+  display: inline;
+}
+</style>

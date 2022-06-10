@@ -24,22 +24,6 @@ app.use(json());
 app.use("/api/", authentication);
 app.use("/api/", users);
 
-app.get("/api/user/:id/avatar", auth, async(req, res) => {
-    const avatar = await prisma.user.findUnique({
-        where: {
-            id: parseInt(req.params.id),
-        },
-        select: {
-            avatar: true,
-        },
-    });
-    res
-        .type("jpeg")
-        .sendFile(
-            `/home/stagiaire8/accreditations_project/back/uploads/avatars/${avatar.avatar}`
-        );
-});
-
 app.listen(port, () =>
     console.log(`🚀 Server ready at: http://localhost:${port}!`)
 );

@@ -3,7 +3,7 @@
     <img :src="imgURL" alt="avatar" id="avatar" />
     <div>
       <h1>{{ user.username }}</h1>
-      <p>{{ user.followersNum }} followers</p>
+      <p>{{ user.followersNum }} abonnés</p>
     </div>
   </div>
 </template>
@@ -33,18 +33,29 @@ export default {
     this.getFollowers();
   },
   methods: {
-    ...mapActions(userStore, ["fetchAvatar", "fetchFollowers"]),
+    ...mapActions(userStore, [
+      "fetchAvatar",
+      "fetchFollowers",
+      "fetchFolloweesAvatars",
+    ]),
     getimg: async function () {
       this.imgURL = await this.fetchAvatar(this.currentUser.id);
     },
     getFollowers: async function () {
       this.fetchFollowers(this.currentUser.id);
+      this.fetchFolloweesAvatars(this.currentUser.id);
     },
   },
 };
 </script>
 
 <style scoped>
+h1 {
+  margin-bottom: 0;
+}
+p {
+  margin-top: 0;
+}
 #avatar {
   border-radius: 50%;
   width: 100px;

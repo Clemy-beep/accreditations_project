@@ -13,7 +13,7 @@ async function main() {
             email: "clementine.digny@gmail.com",
             date_of_birth: new Date("1994-05-21"),
             password: bcrypt.hashSync("123456", 5),
-            avatar: "241758cb7dd290786b5507900a55e8e9",
+            avatar: "32ec9531d80a6fa72945cb4c1cb0f084",
             isRestricted: false,
         },
     });

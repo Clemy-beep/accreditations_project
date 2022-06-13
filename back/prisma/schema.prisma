@@ -42,8 +42,8 @@ enum Role {
 
 model Publication {
   id Int @id @default(autoincrement())
-  filmTitle String
-  filmResume String @db.LongText
+  title String @unique
+  resume String @db.LongText
   casting ActorsOnFilm[]
   realisatorId Int?
   realisator Realisator? @relation(fields: [realisatorId], references : [id])

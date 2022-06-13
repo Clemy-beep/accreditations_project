@@ -3,7 +3,7 @@
     <div id="logo">
       <img src="../assets/images/logo.png" alt="logo" />
       <h1>
-        <router-link to="/">CMDB</router-link>
+        <router-link to="/home">CMDB</router-link>
       </h1>
     </div>
     <nav>

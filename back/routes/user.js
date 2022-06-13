@@ -73,4 +73,5 @@ router.get("/user/:id/avatar", auth, async(req, res) => {
             `/home/clemy/Documents/accreditations_project/back/uploads/avatars/${avatar.avatar}`
         );
 });
+
 module.exports = router;

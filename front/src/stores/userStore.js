@@ -70,6 +70,7 @@ export const userStore = defineStore({
             console.log(res);
 
             this.user.followees = res.users;
+            this.fetchFolloweesAvatars();
         },
         fetchFolloweesAvatars: async function() {
             await this.user.followees.forEach((followee) => {

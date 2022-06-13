@@ -5,14 +5,19 @@
       <h1>{{ user.username }}</h1>
       <p>{{ user.followersNum }} abonnés</p>
     </div>
+    <BadgeComponent :text="user.role.toLowerCase()" />
   </div>
 </template>
 
 <script>
 import { userStore } from "@/stores/userStore";
 import { mapActions, mapState } from "pinia";
+import BadgeComponent from "../visual-components/BadgeComponent.vue";
 
 export default {
+  components: {
+    BadgeComponent,
+  },
   data() {
     return {
       imgURL: "",
@@ -33,17 +38,12 @@ export default {
     this.getFollowers();
   },
   methods: {
-    ...mapActions(userStore, [
-      "fetchAvatar",
-      "fetchFollowers",
-      "fetchFolloweesAvatars",
-    ]),
+    ...mapActions(userStore, ["fetchAvatar", "fetchFollowers"]),
     getimg: async function () {
       this.imgURL = await this.fetchAvatar(this.currentUser.id);
     },
     getFollowers: async function () {
       this.fetchFollowers(this.currentUser.id);
-      this.fetchFolloweesAvatars(this.currentUser.id);
     },
   },
 };
@@ -68,5 +68,6 @@ p {
   justify-content: center;
   align-items: center;
   gap: 1em;
+  margin: 64px;
 }
 </style>

@@ -7,7 +7,7 @@
     <PrimaryButton :text="'Créer une fiche'" />
   </div>
   <UserFolloweesList />
-  <div id="user-lists"></div>
+  <UserLists />
   <div id="user-pins"></div>
 </template>
 <script>
@@ -16,6 +16,7 @@ import LoggedHeader from "@/components/LoggedHeader.vue";
 import UserInfos from "@/components/user-component/UserInfos.vue";
 import SecondaryButton from "@/components/visual-components/SecondaryButton.vue";
 import UserFolloweesList from "@/components/user-component/UserFolloweesList.vue";
+import UserLists from "@/components/lists-components/UserLists.vue";
 export default {
   components: {
     LoggedHeader,
@@ -23,6 +24,7 @@ export default {
     UserInfos,
     SecondaryButton,
     UserFolloweesList,
+    UserLists,
   },
 };
 </script>

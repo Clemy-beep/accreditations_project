@@ -40,15 +40,6 @@
           />
         </div>
         <div>
-          <label for="trailer">Bande annonce</label>
-          <input
-            type="link"
-            name="trailer"
-            id="trailer"
-            v-model="film.trailer"
-          />
-        </div>
-        <div>
           <label for="casting"
             >Casting (prénom puis nom, séparez chaque acteur par une
             virgule)</label
@@ -63,45 +54,68 @@
           />
         </div>
         <div>
-          <label for="realisator">Réalisateur</label>
+          <label>Réalisateur</label>
           <input
             type="text"
-            name="realisator"
-            id="realisator"
-            v-model="film.realisator"
-            placeholder="Ex: Lane"
+            name="realisator-firstname"
+            class="realisator"
+            v-model="film.realisator.firstname"
+            placeholder="Prénom"
             required
           />
-        </div>
-        <div>
-          <label for="pwd">Mot de passe</label>
           <input
-            type="password"
-            name="pwd"
-            id="pwd"
-            v-model="user.pwd"
+            type="text"
+            name="realisator-lastname"
+            class="realisator"
+            v-model="film.realisator.lastname"
+            placeholder="Nom"
             required
           />
         </div>
         <div>
-          <label for="dateOfBirth">Date de naissance</label>
+          <label for="pwd">Producteur</label>
           <input
-            type="date"
-            name="dateOfBirth"
-            id="dateOfBirth"
-            v-model="user.dateOfBirth"
-            :max="new Date()"
+            type="text"
+            name="producer-firstname"
+            class="producer"
+            v-model="film.producer.firstname"
+            placeholder="Prénom"
+            required
+          />
+          <input
+            type="text"
+            name="producer-lastname"
+            class="producer"
+            v-model="film.producer.lastname"
+            placeholder="Nom"
             required
           />
         </div>
         <div>
-          <label for="role">Type d'utilisateur</label>
-          <select name="role" id="role" v-model="user.role" required>
-            <option value="USER">Utilisateur</option>
-            <option value="MODERATOR">Moderateur</option>
-          </select>
+          <label for="critic">Votre avis</label>
+          <textarea
+            name="critic"
+            id="critic"
+            cols="30"
+            rows="10"
+            v-model="film.critic"
+            required
+          ></textarea>
         </div>
-        <PrimaryButton :text="'S\'enregistrer'" @click.prevent="handleSubmit" />
+        <div>
+          <label for="budget">Budget ($)</label>
+          <input
+            type="number"
+            name="budget"
+            id="budget="
+            placeholder="Ex: 10 0000 0000"
+            required
+          />
+        </div>
+        <input type="hidden" name="authorId" v-model="film.authorid" />
+        <input type="hidden" name="createdAt" v-model="film.createdAt" />
+        <input type="hidden" name="status" v-model="film.status" />
+        <PrimaryButton :text="'Créer la fiche'" @click.prevent="handleSubmit" />
       </div>
     </div>
   </form>
@@ -112,6 +126,8 @@
 <script>
 import PrimaryButton from "@/components/visual-components/PrimaryButton.vue";
 import ConfirmDialog from "@/components/visual-components/ConfirmDialog.vue";
+import { mapState } from "pinia";
+import { userStore } from "@/stores/userStore";
 export default {
   components: {
     PrimaryButton,
@@ -119,11 +135,22 @@ export default {
   },
   data() {
     return {
+      film: {
+        realisator: {},
+        producer: {},
+      },
       user: {},
-      url: "",
       response: "",
       success: false,
     };
+  },
+  computed: {
+    ...mapState(userStore, {
+      getUser: "user",
+    }),
+    currentUser() {
+      return this.getUser;
+    },
   },
   methods: {
     onFileChange(e) {
@@ -284,7 +311,7 @@ input[type="text"],
 input[type="password"],
 input[type="email"],
 input[type="date"],
-select {
+input[type="number"] {
   height: 42px;
   width: 90%;
   min-width: calc(100% - 128px);
@@ -296,7 +323,18 @@ select {
   font-family: "Montserrat", sans-serif;
   padding-right: 16px;
 }
-
+textarea {
+  height: 42px;
+  width: 90%;
+  min-width: calc(100% - 128px);
+  border: 2px solid #9461ff;
+  background-color: transparent;
+  border-radius: 19px;
+  font-size: 16px;
+  padding-left: 16px;
+  font-family: "Montserrat", sans-serif;
+  padding-right: 16px;
+}
 select {
   width: 100%;
 }
@@ -330,6 +368,12 @@ select {
   font-weight: 500;
   color: #9461ff;
   text-decoration: none;
+}
+
+.realisation,
+.producer {
+  display: flex;
+  width: 40%;
 }
 
 @media (max-width: 980px) {

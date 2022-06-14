@@ -40,6 +40,12 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "home" */ "../views/ProfileView.vue"),
   },
+  {
+    path: "/submit-pin",
+    name: "submit-pin",
+    component: () =>
+      import(/* webpackChunkName: "submit-pin" */ "../views/SubmitPinView.vue"),
+  },
 ];
 
 const router = createRouter({

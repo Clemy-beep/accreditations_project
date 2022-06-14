@@ -107,14 +107,16 @@ model Realisator {
   firstname String
   lastname String
   films Publication[]
+  @@unique([firstname, lastname])
 }
 
 model Producer {
   id Int @id @default(autoincrement())
-  firstname String?
-  lastname String?
-  societyname String
+  firstname String
+  lastname String
+  societyname String?
   films Publication[]
+  @@unique([firstname, lastname])
 }
 
 model Genre {

@@ -28,3 +28,10 @@ router.post("/add-film", auth, async(req, res) => {
 
     console.log(req.body);
 });
+
+router.get("/genres", auth, async(req, res) => {
+    const genres = await prisma.genre.findMany();
+    res.json(genres);
+});
+
+module.exports = router;

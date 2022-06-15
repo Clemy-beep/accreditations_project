@@ -1,13 +1,10 @@
 //#region
 require("dotenv").config();
 const express = require("express");
-const multer = require("multer");
 const { PrismaClient } = require("@prisma/client");
-const { urlencoded, json } = require("body-parser");
 const prisma = new PrismaClient();
 const router = express.Router();
 const auth = require("../middleware/auth.js");
-const { register } = require("ts-node");
 //#endregion
 
 router.get("/user/:id/followed-accounts", auth, async(req, res) => {

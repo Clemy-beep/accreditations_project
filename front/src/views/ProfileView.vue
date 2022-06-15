@@ -3,8 +3,8 @@
   <UserInfos />
   <div id="creation-actions">
     <SecondaryButton :text="'Voir mes infos'" />
-    <PrimaryButton :text="'Créer une liste'" />
-    <PrimaryButton :text="'Créer une fiche'" />
+    <PrimaryButton @click="redirectToListCreation" :text="'Créer une liste'" />
+    <PrimaryButton @click="redirectToPinCreation" :text="'Créer une fiche'" />
   </div>
   <UserFolloweesList />
   <UserLists />
@@ -25,6 +25,14 @@ export default {
     SecondaryButton,
     UserFolloweesList,
     UserLists,
+  },
+  methods: {
+    redirectToPinCreation: function () {
+      this.$router.push("/submit-pin");
+    },
+    redirectToListCreation: function () {
+      this.$router.push("/submit-list");
+    },
   },
 };
 </script>

@@ -80,7 +80,8 @@ console.log(store.$state);
 
 if (!store.$state.user.id || !localStorage.getItem("token")) {
   console.log(store.$state.user);
-  router.push("/");
+  alert("Merci de vous reconnecter");
+  router.replace("/");
 }
 const user = store.$state.user;
 </script>

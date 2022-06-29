@@ -10,28 +10,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id Int @id @default(autoincrement())
-  email String @unique
-  username String @unique
-  firstname String
-  lastname String
-  password String
-  date_of_birth DateTime
-  registerDate DateTime @default(now())
-  followedBy User[]  @relation("UserFollows", references: [id])
-  following  User[]  @relation("UserFollows", references: [id])
-  avatar String
-  role Role @default(USER)
-  postedPublications Publication[] @relation("PostedPublications")
-  moderatedPublications Publication[] @relation("ModeratedPublications")
-  lists List[]
-  rates Rate[]
-  publicationComments PublicationComment[]
-  listComments ListComment[]
-  isRestricted Boolean
-  token String?
+  id                    Int                  @id @default(autoincrement())
+  email                 String               @unique
+  username              String               @unique
+  firstname             String
+  lastname              String
+  password              String
+  date_of_birth         DateTime
+  registerDate          DateTime             @default(now())
+  followedBy            User[]               @relation("UserFollows")
+  following             User[]               @relation("UserFollows")
+  avatar                String
+  role                  Role                 @default(USER)
+  postedPublications    Publication[]        @relation("PostedPublications")
+  moderatedPublications Publication[]        @relation("ModeratedPublications")
+  lists                 List[]
+  rates                 Rate[]
+  publicationComments   PublicationComment[]
+  listComments          ListComment[]
+  isRestricted          Boolean
+  token                 String?
 }
 
 enum Role {
@@ -41,125 +40,128 @@ enum Role {
 }
 
 model Publication {
-  id Int @id @default(autoincrement())
-  title String @unique
-  resume String @db.LongText
-  casting ActorsOnFilm[]
-  realisatorId Int?
-  realisator Realisator? @relation(fields: [realisatorId], references : [id])
-  producerId Int?
-  producer Producer? @relation(fields: [producerId], references : [id])
-  genres FilmGenres[]
-  budget Float?
-  poster String?
-  rates Rate[]
-  authorId Int
-  author User @relation(name: "PostedPublications",fields: [authorId], references : [id])
-  moderatorId Int?
-  moderator User? @relation(name: "ModeratedPublications",fields: [moderatorId], references : [id])
-  createdAt DateTime @default(now())
-  status String
-  critic String @db.LongText
-  isOpenToComment Boolean @default(true)
-  comments PublicationComment[]
-  lists FilmsInLists[]
+  id              Int                  @id @default(autoincrement())
+  title           String               @unique
+  resume          String               @db.LongText
+  relaaseDate     DateTime?            @db.Date
+  casting         ActorsOnFilm[]
+  realisatorId    Int?
+  realisator      Realisator?          @relation(fields: [realisatorId], references: [id])
+  producerId      Int?
+  producer        Producer?            @relation(fields: [producerId], references: [id])
+  genres          FilmGenres[]
+  budget          Float?
+  poster          String?
+  rates           Rate[]
+  authorId        Int
+  author          User                 @relation(name: "PostedPublications", fields: [authorId], references: [id])
+  moderatorId     Int?
+  moderator       User?                @relation(name: "ModeratedPublications", fields: [moderatorId], references: [id])
+  createdAt       DateTime             @default(now())
+  status          String
+  critic          String               @db.LongText
+  isOpenToComment Boolean              @default(false)
+  comments        PublicationComment[]
+  lists           FilmsInLists[]
+  refusedReason   String?
 }
 
 model List {
-  id Int @id @default(autoincrement())
-  title String @db.VarChar(255)
-  films FilmsInLists[]
-  authorId Int
-  author User @relation(fields: [authorId], references : [id])
-  description String @db.LongText
-  public Boolean
-  comments ListComment[]
+  id          Int            @id @default(autoincrement())
+  title       String         @db.VarChar(255)
+  films       FilmsInLists[]
+  authorId    Int
+  author      User           @relation(fields: [authorId], references: [id])
+  description String         @db.LongText
+  public      Boolean
+  comments    ListComment[]
 }
 
 model FilmsInLists {
   listId Int
-  list List @relation(fields: [listId], references : [id])
-  film Publication @relation(fields: [filmId], references : [id])
+  list   List        @relation(fields: [listId], references: [id])
+  film   Publication @relation(fields: [filmId], references: [id])
   filmId Int
 
   @@id([listId, filmId])
 }
 
 model Actor {
-  id Int @id @default(autoincrement())
-  firstname String @db.VarChar(100)
-  lastname String @db.VarChar(100)
-  age Int
-  films ActorsOnFilm[]
+  id        Int            @id @default(autoincrement())
+  firstname String         @db.VarChar(100)
+  lastname  String         @db.VarChar(100)
+  films     ActorsOnFilm[]
 }
 
 model ActorsOnFilm {
   actorId Int
-  actor Actor @relation(fields: [actorId], references : [id])
-  filmId Int
-  film Publication @relation(fields: [filmId], references :[id])
+  actor   Actor       @relation(fields: [actorId], references: [id])
+  filmTitle String 
+  film    Publication @relation(fields: [filmTitle], references: [title])
 
-  @@id([actorId, filmId])
+  @@id([actorId, filmTitle])
 }
 
 model Realisator {
-  id Int @id @default(autoincrement())
+  id        Int           @id @default(autoincrement())
   firstname String
-  lastname String
-  films Publication[]
+  lastname  String
+  films     Publication[]
+
   @@unique([firstname, lastname])
 }
 
 model Producer {
-  id Int @id @default(autoincrement())
+  id        Int           @id @default(autoincrement())
   firstname String
-  lastname String
-  societyname String?
-  films Publication[]
+  lastname  String
+  films     Publication[]
+
   @@unique([firstname, lastname])
 }
 
 model Genre {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(50)
+  id    Int          @id @default(autoincrement())
+  name  String       @db.VarChar(50)
   films FilmGenres[]
 }
 
 model FilmGenres {
-  film Publication @relation(fields:[filmId], references : [id])
-  filmId Int
-  genre Genre @relation(fields:[genreId], references : [id])
-  genreId Int
+  film      Publication @relation(fields: [filmTitle], references: [title])
+  filmTitle String
+  genre     Genre       @relation(fields: [genreId], references: [id])
+  genreId   Int
 
-  @@id([filmId, genreId])
+  @@id([filmTitle, genreId])
 }
 
-model Rate{
-  id Int @id @default(autoincrement())
-  rate Int
-  issuer User @relation(fields:[issuerId], references : [id])
-  issuerId Int 
-  film Publication @relation(fields: [filmId], references : [id])
-  filmId Int
-
-  @@unique([filmId, issuerId])
-}
-
-model PublicationComment{
-  id Int @id @default(autoincrement())
-  author User @relation(fields: [authorId], references : [id])
+model Rate {
+  id       Int         @id @default(autoincrement())
+  rate     Int
+  author   User        @relation(fields: [authorId], references: [id])
   authorId Int
-  film Publication @relation(fields: [filmId], references : [id])
-  filmId Int
-  text String @db.LongText
-  createdAt DateTime @default(now())
+  film     Publication @relation(fields: [filmId], references: [id])
+  filmId   Int
+
+  @@unique([filmId, authorId])
+}
+
+model PublicationComment {
+  id        Int         @id @default(autoincrement())
+  author    User        @relation(fields: [authorId], references: [id])
+  authorId  Int
+  film      Publication @relation(fields: [filmId], references: [id])
+  filmId    Int
+  text      String      @db.LongText
+  createdAt DateTime    @default(now())
 }
 
 model ListComment {
-  id Int @id @default(autoincrement())
-  author User @relation(fields: [authorId], references : [id])
-  authorId Int
-  listId Int
-  list List @relation(fields: [listId], references :[id])
+  id        Int      @id @default(autoincrement())
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
+  listId    Int
+  list      List     @relation(fields: [listId], references: [id])
   createdAt DateTime @default(now())
+  text      String   @db.LongText
 }

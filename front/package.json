@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "core-js": "^3.8.3",
+    "gitart-scroll-carousel": "^1.1.0",
     "pinia": "^2.0.14",
     "pinia-plugin-persistedstate": "^1.5.1",
     "vue": "^3.2.13",

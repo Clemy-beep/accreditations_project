@@ -21,6 +21,7 @@ button {
   cursor: pointer;
   border-radius: 16px;
   margin: 0.5em;
+  width: fit-content;
 }
 
 button:hover,

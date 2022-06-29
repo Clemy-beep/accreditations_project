@@ -158,7 +158,7 @@
             <div id="response" v-if="error !== ''">{{ error }}</div>
             <div id="success" v-if="success === true">
               Création de ficher réussie ! Vous pouvez la consulter
-              <router-link to="/login">ici</router-link>.
+              <router-link to="/profile">ici</router-link>.
             </div>
           </div>
         </div>
@@ -168,9 +168,10 @@
 </template>
 <script>
 import PrimaryButton from "@/components/visual-components/PrimaryButton.vue";
-import { mapActions, mapState } from "pinia";
+import { mapActions, mapState, mapWritableState } from "pinia";
 import { userStore } from "@/stores/userStore";
 import { genreStore } from "@/stores/genreStore";
+import { filmsStore } from "@/stores/filmStore";
 export default {
   components: {
     PrimaryButton,
@@ -196,6 +197,9 @@ export default {
     }),
     ...mapState(genreStore, {
       getGenres: "genres",
+    }),
+    ...mapWritableState(filmsStore, {
+      filmsStore: "userFilms",
     }),
     currentUser() {
       return this.getUser;
@@ -318,6 +322,7 @@ export default {
         if (res.meta && res.meta.target === "Publication_title_key")
           throw "Ce film existe déjà.";
         if (res.id) this.success = true;
+        this.filmsStore = [];
       } catch (e) {
         this.error = `${e}`;
       }

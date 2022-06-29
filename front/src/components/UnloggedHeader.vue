@@ -23,9 +23,10 @@
 <script setup>
 import { userStore } from "@/stores/userStore";
 import { genreStore } from "@/stores/genreStore";
+import { filmsStore } from "@/stores/filmStore";
 import { onMounted } from "vue";
 
-const stores = [userStore(), genreStore()];
+const stores = [userStore(), genreStore(), filmsStore()];
 onMounted(() => {
   localStorage.clear();
   stores.forEach((store) => {

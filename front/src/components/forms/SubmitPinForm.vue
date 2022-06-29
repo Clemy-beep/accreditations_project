@@ -24,11 +24,6 @@
           </label>
         </div>
         <div id="form-side">
-          <div id="response" v-if="response !== ''">{{ response }}</div>
-          <div id="success" v-if="success === true">
-            Création de ficher réussie ! Vous pouvez la consulter
-            <router-link to="/login">ici</router-link>.
-          </div>
           <div id="form">
             <div>
               <label for="title">Titre *</label>
@@ -53,7 +48,17 @@
               ></textarea>
             </div>
             <div>
-              <label>Genres *</label>
+              <label for="realease">Date de sortie</label>
+              <input
+                type="date"
+                name="releaseDate"
+                id="releaseDate"
+                v-model="film.releaseDate"
+                :max="Date()"
+              />
+            </div>
+            <div>
+              <label>Genres </label>
               <div id="genres">
                 <div v-for="genre in genres" :key="genre.id">
                   <input
@@ -80,9 +85,10 @@
                 type="text"
                 name="casting"
                 id="casting"
-                v-model="casting"
+                v-model="film.casting"
                 placeholder="Ex: Loïs Lane, Bruce Wayne, John Wayne"
                 required
+                multiple
               />
             </div>
             <div>
@@ -94,7 +100,6 @@
                   class="row-input"
                   v-model="film.realisator.firstname"
                   placeholder="Prénom"
-                  required
                 />
                 <input
                   type="text"
@@ -102,7 +107,6 @@
                   class="row-input"
                   v-model="film.realisator.lastname"
                   placeholder="Nom"
-                  required
                 />
               </div>
             </div>
@@ -115,7 +119,6 @@
                   class="row-input"
                   v-model="film.producer.firstname"
                   placeholder="Prénom"
-                  required
                 />
                 <input
                   type="text"
@@ -123,7 +126,6 @@
                   class="row-input"
                   v-model="film.producer.lastname"
                   placeholder="Nom"
-                  required
                 />
               </div>
             </div>
@@ -133,8 +135,8 @@
                 type="number"
                 name="budget"
                 id="budget="
+                v-model="film.budget"
                 placeholder="Ex: 10 0000 0000"
-                required
               />
             </div>
             <div>
@@ -148,39 +150,34 @@
                 required
               ></textarea>
             </div>
-            <input type="hidden" name="authorId" v-model="film.authorid" />
-            <input type="hidden" name="createdAt" v-model="film.createdAt" />
-            <input type="hidden" name="status" v-model="film.status" />
             <span id="mandatory"> * = champs obligatoires</span>
             <PrimaryButton
               :text="'Créer la fiche'"
               @click.prevent="handleSubmit"
             />
+            <div id="response" v-if="error !== ''">{{ error }}</div>
+            <div id="success" v-if="success === true">
+              Création de ficher réussie ! Vous pouvez la consulter
+              <router-link to="/login">ici</router-link>.
+            </div>
           </div>
         </div>
       </div>
     </form>
   </div>
-
-  <teleport to="body">
-    <ConfirmDialog ref="confirmDialog" />
-  </teleport>
 </template>
 <script>
 import PrimaryButton from "@/components/visual-components/PrimaryButton.vue";
-import ConfirmDialog from "@/components/visual-components/ConfirmDialog.vue";
 import { mapActions, mapState } from "pinia";
 import { userStore } from "@/stores/userStore";
 import { genreStore } from "@/stores/genreStore";
 export default {
   components: {
     PrimaryButton,
-    ConfirmDialog,
   },
   data() {
     return {
       url: "",
-      casting: "",
       film: {
         realisator: {},
         producer: {},
@@ -188,7 +185,7 @@ export default {
         genres: [],
       },
       user: {},
-      response: "",
+      error: "",
       success: false,
       genres: [],
     };
@@ -209,7 +206,7 @@ export default {
   },
   created() {
     this.fGenres();
-    this.genres = this.currentGenre;
+    this.user = this.currentUser;
   },
   methods: {
     ...mapActions(genreStore, ["fetchGenres"]),
@@ -221,71 +218,109 @@ export default {
     },
     fGenres: async function () {
       await this.fetchGenres();
+      this.genres = this.currentGenre;
     },
-    handleSubmit: async function () {
+
+    handleSubmit: function () {
       this.error = "";
       this.success = false;
-      console.log(this.film);
-      if (
-        !(
-          this.film.title &&
-          this.film.resume &&
-          this.film.critic &&
-          this.casting
-        )
-      ) {
-        this.response = "Merci de remplir les champs obligatoires.";
-        return;
-      }
-      this.film.casting = this.casting.split(",");
-      console.log(this.film.casting);
-      // if (!this.validateEmail(this.user.email)) {
-      //   this.response = "Merci de rentrer un email valide.";
-      //   return;
-      // }
-      // if (this.user.role === "MODERATOR") {
-      //   const ok = await this.$refs.confirmDialog.show({
-      //     title: "Compte Modérateur",
-      //     message:
-      //       "Vous vous apprêtez à créer un compte de modérateur. Si vous abusez de vos fonctions, vous vous exposez à une sanction telle que la révocation de vos droits de modération, la restriction de votre compte voire à un banissement de notre site. Si vous ne l'avez pas déjà fait, merci de lire nos règles de modération. En cliquant sur 'M'inscrire', vous confirmez avoir lu nos Termes et Conditions d'utilisation ainsi que nos règles de modération.",
-      //     okButton: "M'inscrire",
-      //   });
-      //   if (!ok) return;
-      //   this.createAccount();
-      //   return;
-      // }
-      // this.createAccount();
-    },
-    createAccount: async function () {
-      let formData = new FormData();
-      formData.append("username", this.user.username.toString());
-      formData.append("firstname", this.user.firstname.toString());
-      formData.append("lastname", this.user.lastname.toString());
-      formData.append("email", this.user.email.toString().toLowerCase());
-      formData.append("pwd", this.user.pwd.toString());
-      formData.append("avatar", this.user.avatar);
-      formData.append("dateOfBirth", this.user.dateOfBirth);
-      formData.append("role", this.user.role);
-      let res = await fetch("http://localhost:3000/api/register", {
-        method: "POST",
-        body: formData,
-      })
-        .then((r) => r.json())
-        .catch((e) => {
-          if (e.message) this.response = e.message;
-          console.log(e);
-        });
-      if (res.error) {
-        this.response = res.message;
-        return;
-      }
+      this.film.authorId = this.user.id;
+      this.film.status = "waiting";
+      console.log(this.film.releaseDate);
+      console.log(typeof this.film.releaseDate);
+      try {
+        if (!(this.film.title && this.film.resume && this.film.critic)) {
+          throw "Merci de remplir les champs obligatoires";
+        }
+        if (this.film.realisator) {
+          if (
+            !/[^0-9]+/g.test(this.film.realisator.firstname) ||
+            !/[^0-9]+/g.test(this.film.realisator.lastname)
+          )
+            throw "Le nom ou le prénom du réalisateur n'est pas valide";
+        }
+        if (this.film.producer) {
+          if (
+            !/[^0-9]+/g.test(this.film.producer.firstname) ||
+            !/[^0-9]+/g.test(this.film.producer.lastname)
+          )
+            throw "Le nom ou le prénom du producteur n'est pas valide";
+        }
 
-      this.success = true;
+        this.postFilm();
+      } catch (error) {
+        this.error = error.message || error;
+        if (error === "Invalid Token") {
+          alert("Merci de vous reconnecter");
+          this.$router.replace("/");
+        }
+      }
     },
-    validateEmail: function (email) {
-      var re =
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return re.test(email);
+    postFilm: async function () {
+      let formData = new FormData();
+      formData.append("hey", "hey");
+      formData.append("title", this.film.title.toString());
+      formData.append("resume", this.film.resume.toString());
+      formData.append("critic", this.film.critic.toString());
+      formData.append("status", this.film.status.toString());
+      formData.append("authorId", this.user.id.toString());
+      console.log(this.film);
+      if (this.film.realisator) {
+        formData.append(
+          "realisatorFirstname",
+          this.film.realisator.firstname.toString()
+        );
+        formData.append(
+          "realisatorLastname",
+          this.film.realisator.lastname.toString()
+        );
+      }
+      if (this.film.producer) {
+        formData.append("producerFirstname", this.film.producer.firstname);
+        formData.append("producerLastname", this.film.producer.lastname);
+      }
+      if (this.film.poster) {
+        formData.append("poster", this.film.poster);
+      }
+      if (this.film.budget) {
+        formData.append("budget", this.film.budget.toString());
+      }
+      if (this.film.genres) {
+        formData.append("genres", this.film.genres);
+      }
+      if (this.film.casting) {
+        formData.append("casting", this.film.casting);
+      }
+      if (this.film.releaseDate)
+        formData.append("releaseDate", this.film.releaseDate);
+      try {
+        let res = await fetch("http://localhost:3000/api/add-film", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: formData,
+        })
+          .then((r) => {
+            if (r.status === 401) {
+              alert("Session expirée. Merci de vous reconnecter.");
+              this.$router.replace("/");
+              throw "Session expirée. Merci de vous reconnecter.";
+            }
+            return r.json();
+          })
+          .catch((e) => {
+            throw `${e}`;
+          });
+        if (res.error) {
+          throw `${res.message}`;
+        }
+        if (res.meta && res.meta.target === "Publication_title_key")
+          throw "Ce film existe déjà.";
+        if (res.id) this.success = true;
+      } catch (e) {
+        this.error = `${e}`;
+      }
     },
   },
 };
@@ -484,7 +519,7 @@ select {
     margin: 0 auto;
   }
   .form {
-    flex-direction: column-reverse;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
   }

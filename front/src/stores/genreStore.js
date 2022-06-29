@@ -8,6 +8,7 @@ export const genreStore = defineStore({
   persist: true,
   actions: {
     fetchGenres: async function () {
+      if (this.genres.length > 0) return;
       if (!localStorage.getItem("token")) {
         alert("Merci de vous reconnecter");
         this.$router.push("/");
@@ -20,7 +21,6 @@ export const genreStore = defineStore({
       })
         .then((r) => r.json())
         .catch((e) => console.log(e));
-      console.log(genres);
       if (!genres) throw new Error("Genres not found");
       this.genres = genres;
     },

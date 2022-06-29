@@ -57,8 +57,9 @@ h1 {
   display: inline;
 }
 #lists-link {
-  font-family: Poppins, sans-serif;
-  font-weight: 500;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
   color: #9461ff;
+  cursor: pointer;
 }
 </style>

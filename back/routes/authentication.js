@@ -9,10 +9,10 @@ const upload = multer({ dest: "./uploads/avatars" });
 const mail = require("../middleware/mailer");
 const bcrypt = require("bcrypt");
 const router = express.Router();
+const htmlspecialchars = require("htmlspecialchars");
 //#endregion
 
 router.post("/login", async(req, res) => {
-    console.log(req.body);
     let isGoodPassword;
     const { email, pwd } = req.body;
     const user = await prisma.user.findUnique({
@@ -36,7 +36,7 @@ router.post("/login", async(req, res) => {
         });
         res.status(200).json({ token: token, user: user });
     } catch (e) {
-        console.log(e);
+        return res.status(500).send(e);
     }
 });
 
@@ -47,7 +47,7 @@ router.post("/register", upload.single("avatar"), async(req, res) => {
     const existingUser = await prisma.user.findFirst({
         where: {
             OR: [{
-                    email: email,
+                    email: htmlspecialchars(email.toLowerCase().trim()),
                 },
                 {
                     username: username,
@@ -86,15 +86,15 @@ router.post("/register", upload.single("avatar"), async(req, res) => {
     try {
         const response = await prisma.user.create({
             data: {
-                email,
-                password,
-                firstname,
-                lastname,
+                email: htmlspecialchars(email.toLowerCase().trim()),
+                password: htmlspecialchars(password),
+                firstname: htmlspecialchars(firstname),
+                lastname: htmlspecialchars(lastname),
                 avatar,
                 role,
                 token,
                 isRestricted,
-                username,
+                username: htmlspecialchars(username),
                 date_of_birth,
             },
         });
@@ -104,12 +104,9 @@ router.post("/register", upload.single("avatar"), async(req, res) => {
                 "New Account",
                 `Welcome to the Curious Movie DataBase (CMDB for short) ${username} ! We hope you have a great time posting, commenting and talking about Direct to DVD movies with some fellows afficionados ! To log in, please click on the following link : http://192.168.1.40/login`
             );
-        res.json({ response: response });
+        res.status(200).json({ response: response });
     } catch (e) {
-        console.log(e);
-        res.status(500).json({
-            message: "L'utilisateur n'a pas pu être créé. Merci de réessayer ultérieurement.",
-        });
+        res.status(500).send(e);
     }
 });
 

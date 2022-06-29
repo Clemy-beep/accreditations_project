@@ -44,10 +44,12 @@ nav a {
 h1,
 h2,
 h3 {
-  font-family: "Montserrat", sans-serif;
-}
-p {
   font-family: "Poppins", sans-serif;
+  font-weight: 600;
+}
+p,
+a {
+  font-family: "Montserrat", sans-serif;
 }
 
 .container {

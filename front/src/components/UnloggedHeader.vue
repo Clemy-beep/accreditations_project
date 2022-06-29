@@ -22,12 +22,15 @@
 </template>
 <script setup>
 import { userStore } from "@/stores/userStore";
+import { genreStore } from "@/stores/genreStore";
 import { onMounted } from "vue";
 
-const store = userStore();
+const stores = [userStore(), genreStore()];
 onMounted(() => {
   localStorage.clear();
-  store.$reset();
+  stores.forEach((store) => {
+    store.$reset();
+  });
 });
 </script>
 <style scoped>

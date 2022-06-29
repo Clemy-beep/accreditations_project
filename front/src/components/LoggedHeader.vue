@@ -76,7 +76,6 @@ import { useRouter } from "vue-router";
 
 const store = userStore();
 const router = useRouter();
-console.log(store.$state);
 
 if (!store.$state.user.id || !localStorage.getItem("token")) {
   console.log(store.$state.user);
@@ -99,6 +98,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-shadow: 0px 0px 20px 4px #00000035;
 }
 
 #logo,

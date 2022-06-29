@@ -195,7 +195,6 @@ export default {
         this.response = res.message;
         return;
       }
-
       this.success = true;
     },
     validateEmail: function (email) {

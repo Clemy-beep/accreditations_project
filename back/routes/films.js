@@ -6,6 +6,8 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const upload = multer({ dest: "./uploads/posters" });
 const auth = require("../middleware/auth");
+const { send } = require("process");
+const { title } = require("process");
 const router = express.Router();
 //#endregion
 
@@ -150,5 +152,36 @@ async function updateOrCreateCasting(casting, title) {
         });
     });
 }
+
+router.get("/films/user/:id", auth, async(req, res) => {
+    const id = req.params.id;
+    try {
+        const films = await prisma.publication.findMany({
+            where: {
+                authorId: parseInt(id),
+            },
+            orderBy: {
+                createdAt: "desc",
+            },
+            include: {
+                author: {
+                    select: {
+                        id: true,
+                        username: true,
+                    },
+                },
+                _count: {
+                    select: {
+                        comments: true,
+                    },
+                },
+            },
+        });
+        res.status(200).json({ films });
+    } catch (e) {
+        console.log(e);
+        res.status(500).send(e);
+    }
+});
 
 module.exports = router;

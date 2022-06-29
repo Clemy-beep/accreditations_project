@@ -63,36 +63,39 @@ export default defineComponent({
   methods: {
     handleSubmit: async function () {
       this.response = "";
-      if (!this.user.pwd || !this.user.email) {
-        this.response = "Tous les champs sont requis";
-        return;
+      try {
+        if (!this.user.pwd || !this.user.email) {
+          throw "Tous les champs sont requis.";
+        }
+        let res = await fetch("http://localhost:3000/api/login", {
+          method: "POST",
+          body: JSON.stringify(this.user),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((r) => {
+            if (r.status === 403) {
+              throw "Email ou mot de passe incorrect.";
+            }
+            return r.json();
+          })
+          .catch((e) => {
+            throw `${e}`;
+          });
+        if (!res) {
+          return;
+        }
+        if (!res.token) {
+          throw `Une erreur s'est produite. Merci de réessayer ultrérieurement.`;
+        }
+        this.setUser = res.user;
+        localStorage.setItem("token", res.token);
+        localStorage.setItem("id", res.user.id);
+        this.$router.push("/home");
+      } catch (e) {
+        this.response = `${e}`;
       }
-      let res = await fetch("http://localhost:3000/api/login", {
-        method: "POST",
-        body: JSON.stringify(this.user),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((r) => r.json())
-        .catch((e) => {
-          if (e.error === "Invalid credentials") {
-            this.response = e.message;
-          }
-          console.log(e);
-        });
-      if (res && res.error === "Invalid credentials") {
-        this.response = res.message;
-        return;
-      }
-      if (!res.token) {
-        this.response = "Une erreur s'est produite, connexion impossible";
-        return;
-      }
-      this.setUser = res.user;
-      localStorage.setItem("token", res.token);
-      localStorage.setItem("id", res.user.id);
-      this.$router.push("/home");
     },
   },
 });

@@ -9,7 +9,7 @@ const upload = multer({ dest: "./uploads/avatars" });
 const mail = require("../middleware/mailer");
 const bcrypt = require("bcrypt");
 const router = express.Router();
-const htmlspecialchars = require("htmlspecialchars");
+const striptags = require("striptags");
 //#endregion
 
 router.post("/login", async(req, res) => {
@@ -47,7 +47,7 @@ router.post("/register", upload.single("avatar"), async(req, res) => {
     const existingUser = await prisma.user.findFirst({
         where: {
             OR: [{
-                    email: htmlspecialchars(email.toLowerCase().trim()),
+                    email: striptags(email.toLowerCase().trim()),
                 },
                 {
                     username: username,
@@ -86,15 +86,15 @@ router.post("/register", upload.single("avatar"), async(req, res) => {
     try {
         const response = await prisma.user.create({
             data: {
-                email: htmlspecialchars(email.toLowerCase().trim()),
-                password: htmlspecialchars(password),
-                firstname: htmlspecialchars(firstname),
-                lastname: htmlspecialchars(lastname),
+                email: striptags(email.toLowerCase().trim()),
+                password: striptags(password),
+                firstname: striptags(firstname),
+                lastname: striptags(lastname),
                 avatar,
                 role,
                 token,
                 isRestricted,
-                username: htmlspecialchars(username),
+                username: striptags(username),
                 date_of_birth,
             },
         });

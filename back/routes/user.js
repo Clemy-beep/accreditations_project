@@ -28,31 +28,19 @@ router.get("/user/:id/followed-accounts", auth, async(req, res) => {
 router.get("/user/:id", auth, async(req, res) => {
     const user = await prisma.user.findUnique({
         where: {
-            id: req.params.id,
+            id: parseInt(req.params.id),
         },
-    });
-    if (!user) return res.status(404).json({ message: "User not found." });
-    res.status(200).json({ user });
-});
-
-router.get("/user/:id/followers", auth, async(req, res) => {
-    const followers = await prisma.user.findMany({
-        where: {
-            following: {
-                some: {
-                    id: parseInt(req.params.id),
+        include: {
+            _count: {
+                select: {
+                    followedBy: true,
                 },
             },
         },
-        select: {
-            id: true,
-            username: true,
-            avatar: true,
-        },
     });
-    if (!followers)
-        return res.status(404).json({ message: "Followers not found." });
-    res.status(200).json({ followers });
+    if (!user) return res.status(404).json({ message: "User not found." });
+    delete user.password;
+    res.status(200).json(user);
 });
 
 router.get("/user/:id/avatar", auth, async(req, res) => {

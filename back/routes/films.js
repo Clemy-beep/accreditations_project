@@ -6,10 +6,80 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const upload = multer({ dest: "./uploads/posters" });
 const auth = require("../middleware/auth");
-const { send } = require("process");
-const { title } = require("process");
 const router = express.Router();
 //#endregion
+
+router.get("/week-movies", auth, async(req, res) => {
+    const date = new Date();
+    const lastWeek = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate() - 7
+    );
+    try {
+        let movies = await prisma.publication.findMany({
+            where: {
+                AND: [{
+                        createdAt: {
+                            gte: lastWeek,
+                        },
+                    },
+                    {
+                        status: "accepted",
+                    },
+                ],
+            },
+            include: {
+                author: {
+                    select: {
+                        id: true,
+                        username: true,
+                        followedBy: true,
+                    },
+                },
+                _count: {
+                    select: {
+                        comments: true,
+                    },
+                },
+                realisator: {
+                    select: {
+                        firstname: true,
+                        lastname: true,
+                    },
+                },
+                producer: {
+                    select: {
+                        firstname: true,
+                        lastname: true,
+                    },
+                },
+                casting: {
+                    select: {
+                        actor: {
+                            select: {
+                                firstname: true,
+                                lastname: true,
+                            },
+                        },
+                    },
+                },
+                genres: {
+                    select: {
+                        genre: {
+                            select: {
+                                name: true,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+        res.status(200).json(movies);
+    } catch (e) {
+        res.status(500).send(e);
+    }
+});
 
 router.post("/add-film", auth, upload.single("poster"), async(req, res) => {
     const {
@@ -30,6 +100,13 @@ router.post("/add-film", auth, upload.single("poster"), async(req, res) => {
     if (req.file) var poster = req.file.filename;
 
     try {
+        const user = await prisma.user.findUnique({
+            where: {
+                id: parseInt(authorId.toString()),
+            },
+        });
+        if (user.isRestricted === false)
+            res.status(403).json({ message: "Vous n'êtes pas autorisé à publier." });
         const response = await prisma.publication.create({
             data: {
                 title,
@@ -106,6 +183,7 @@ async function updateGenres(genres, title) {
 
 async function updateOrCreateCasting(casting, title) {
     let newCasting = casting.split(",");
+    if (newCasting.length < 1) return;
     let formatedCasting = [];
     newCasting.forEach((element) => {
         element = element.split(" ");
@@ -153,7 +231,7 @@ async function updateOrCreateCasting(casting, title) {
     });
 }
 
-router.get("/films/user/:id", auth, async(req, res) => {
+router.get("/films/:id", auth, async(req, res) => {
     const id = req.params.id;
     try {
         const films = await prisma.publication.findMany({
@@ -168,11 +246,43 @@ router.get("/films/user/:id", auth, async(req, res) => {
                     select: {
                         id: true,
                         username: true,
+                        followedBy: true,
                     },
                 },
                 _count: {
                     select: {
                         comments: true,
+                    },
+                },
+                realisator: {
+                    select: {
+                        firstname: true,
+                        lastname: true,
+                    },
+                },
+                producer: {
+                    select: {
+                        firstname: true,
+                        lastname: true,
+                    },
+                },
+                casting: {
+                    select: {
+                        actor: {
+                            select: {
+                                firstname: true,
+                                lastname: true,
+                            },
+                        },
+                    },
+                },
+                genres: {
+                    select: {
+                        genre: {
+                            select: {
+                                name: true,
+                            },
+                        },
                     },
                 },
             },
@@ -182,6 +292,22 @@ router.get("/films/user/:id", auth, async(req, res) => {
         console.log(e);
         res.status(500).send(e);
     }
+});
+
+router.get("/films/poster/:id", auth, async(req, res) => {
+    const poster = await prisma.publication.findUnique({
+        where: {
+            id: parseInt(req.params.id),
+        },
+        select: {
+            poster: true,
+        },
+    });
+    res
+        .type("jpeg")
+        .sendFile(
+            `/home/clemy/Documents/accreditations_project/back/uploads/posters/${poster.poster}`
+        );
 });
 
 module.exports = router;

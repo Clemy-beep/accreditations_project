@@ -43,12 +43,11 @@
         >
 
         <router-link
-          to="/moderate"
+          to="/moderate-movies"
           v-if="user.role.toString() == 'MODERATOR'"
           id="modo-text"
           >Modération</router-link
         >
-
         <router-link id="admin-text" to="/admin" v-if="user.role === 'ADMIN'"
           >Admin</router-link
         >

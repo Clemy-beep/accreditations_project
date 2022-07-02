@@ -1,14 +1,15 @@
 <template>
   <LoggedHeader />
-  <UserPin />
+  <ModeratePin />
 </template>
 <script>
 import LoggedHeader from "@/components/LoggedHeader.vue";
-import UserPin from "@/components/pins-components/UserPin.vue";
+import ModeratePin from "@/components/moderator-components/ModeratePin.vue";
 export default {
   components: {
     LoggedHeader,
-    UserPin,
+    ModeratePin,
   },
 };
 </script>
+<style scoped></style>

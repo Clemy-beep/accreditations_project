@@ -1,5 +1,5 @@
 <template>
-  <div id="container">
+  <div v-if="user.isRestricted === false" id="container">
     <form>
       <h1>
         <span class="material-symbols-outlined reg-icon"> edit_note </span>
@@ -165,6 +165,12 @@
       </div>
     </form>
   </div>
+  <div id="container" v-if="user.isRestricted === true">
+    <p>
+      Votre compte a été restreint par un modérateur, vous n'êtes pas autorisé à
+      publier.
+    </p>
+  </div>
 </template>
 <script>
 import PrimaryButton from "@/components/visual-components/PrimaryButton.vue";
@@ -298,6 +304,10 @@ export default {
       if (this.film.releaseDate)
         formData.append("releaseDate", this.film.releaseDate);
       try {
+        if (this.user.isRestricted === true)
+          throw "Votre compte a été restreint par un modérateur. Vous n'êtes pas autorisé à publier.";
+        if (!(this.film.title && this.film.resume && this.film.critic))
+          throw "Merci de remplir les champs obligatoires";
         let res = await fetch("http://localhost:3000/api/add-film", {
           method: "POST",
           headers: {
@@ -351,7 +361,7 @@ export default {
 h1 {
   text-align: left;
   margin-top: 32px;
-  width: 50%;
+  width: 55%;
 }
 
 form {

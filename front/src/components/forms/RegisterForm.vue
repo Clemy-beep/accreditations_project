@@ -139,7 +139,6 @@ export default {
     handleSubmit: async function () {
       this.error = "";
       this.success = false;
-      console.log(this.user);
       if (
         !(
           this.user.email &&
@@ -189,7 +188,6 @@ export default {
         .then((r) => r.json())
         .catch((e) => {
           if (e.message) this.response = e.message;
-          console.log(e);
         });
       if (res.error) {
         this.response = res.message;

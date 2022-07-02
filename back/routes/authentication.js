@@ -17,6 +17,13 @@ router.post("/login", async(req, res) => {
     const { email, pwd } = req.body;
     const user = await prisma.user.findUnique({
         where: { email: email },
+        include: {
+            _count: {
+                select: {
+                    followedBy: true,
+                },
+            },
+        },
     });
     if (user) isGoodPassword = bcrypt.compareSync(pwd, user.password);
     if (!isGoodPassword || !user)
@@ -102,7 +109,10 @@ router.post("/register", upload.single("avatar"), async(req, res) => {
             mail(
                 email,
                 "New Account",
-                `Welcome to the Curious Movie DataBase (CMDB for short) ${username} ! We hope you have a great time posting, commenting and talking about Direct to DVD movies with some fellows afficionados ! To log in, please click on the following link : http://192.168.1.40/login`
+                `Welcome to the Curious Movie DataBase (CMDB for short) ${username} ! 
+                We hope you have a great time posting, 
+                commenting and talking about Direct to DVD movies with some fellows afficionados !
+                To log in, please click on the following link : http://192.168.1.40/login`
             );
         res.status(200).json({ response: response });
     } catch (e) {

@@ -52,6 +52,10 @@ a {
   font-family: "Montserrat", sans-serif;
 }
 
+h1 {
+  font-size: 36px;
+}
+
 .container {
   margin-top: 32px;
 }

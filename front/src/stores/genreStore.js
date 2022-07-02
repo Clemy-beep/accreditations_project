@@ -5,7 +5,6 @@ export const genreStore = defineStore({
   state: () => ({
     genres: [],
   }),
-  persist: true,
   actions: {
     fetchGenres: async function () {
       if (this.genres.length > 0) return;

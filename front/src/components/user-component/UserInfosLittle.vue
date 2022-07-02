@@ -3,54 +3,27 @@
     <img :src="imgURL" alt="avatar" id="avatar" />
     <div>
       <h3>{{ user.username }}</h3>
-      <p>{{ user.followersNum }} abonnés</p>
+      <p>{{ user._count.followedBy }} abonnés</p>
     </div>
   </div>
 </template>
 
 <script>
-import { userStore } from "@/stores/userStore";
-import { mapActions, mapState } from "pinia";
-
 export default {
-  data() {
-    return {
-      imgURL: "",
-      user: {},
-    };
-  },
-  computed: {
-    ...mapState(userStore, {
-      getUser: "user",
-    }),
-    currentUser() {
-      return this.getUser;
-    },
-  },
-  created() {
-    this.getimg();
-    this.user = this.currentUser;
-    this.getFollowers();
-  },
-  methods: {
-    ...mapActions(userStore, ["fetchAvatar", "fetchFollowers"]),
-    getimg: async function () {
-      this.imgURL = await this.fetchAvatar(this.currentUser.id);
-    },
-    getFollowers: async function () {
-      this.fetchFollowers(this.currentUser.id);
-    },
+  props: {
+    imgURL: String(),
+    user: {},
   },
 };
 </script>
 
 <style scoped>
-h3 {
-  margin-bottom: 0;
-}
+h3,
 p {
-  margin-top: 0;
+  margin: 0;
+  text-align: left;
 }
+
 #avatar {
   border-radius: 50%;
   width: 50px;
@@ -63,6 +36,6 @@ p {
   justify-content: center;
   align-items: center;
   gap: 1em;
-  margin: 64px;
+  margin-bottom: 32px;
 }
 </style>

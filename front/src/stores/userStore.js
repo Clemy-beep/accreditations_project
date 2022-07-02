@@ -19,7 +19,12 @@ export const userStore = defineStore({
                     })
                     .then((r) => r.blob())
                     .then(function(image) {
-                        return URL.createObjectURL(image);
+                        // eslint-disable-next-line no-unused-vars
+                        return new Promise((resolve, _) => {
+                            const reader = new FileReader();
+                            reader.onloadend = () => resolve(reader.result);
+                            reader.readAsDataURL(image);
+                        });
                     });
             } else console.log("no user id");
         },
@@ -37,22 +42,6 @@ export const userStore = defineStore({
             if (!u) throw new Error("User not found");
 
             return u;
-        },
-        fetchFollowers: async function(userId) {
-            if (this.user.followers && this.user.followersNum) return;
-            if (!userId) throw new Error("User Id not found");
-            const res = await fetch(
-                    `http://localhost:3000/api/user/${userId}/followers`, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`,
-                        },
-                    }
-                )
-                .then((r) => r.json())
-                .catch((e) => console.log(e));
-            if (!res) throw new Error("Followers not found");
-            this.followers = res.followers;
-            this.user.followersNum = res.followers.length;
         },
         fetchFollowedAccounts: async function(userId) {
             if (this.user.followees) return;

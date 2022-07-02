@@ -7,6 +7,9 @@
       <span id="followees-list-link">en voir plus</span>
     </div>
     <div id="followees-list">
+      <p v-if="user.followees && user.followees.length === 0">
+        Vous n'êtes abonnés à personne
+      </p>
       <div v-for="followee in user.followees" :key="followee.id">
         <p class="followee-username">{{ followee.username }}</p>
         <img class="followee-avatar" :src="followee.avatar" alt="avatar" />

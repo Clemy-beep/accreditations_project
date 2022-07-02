@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div class="img">
-      <img :src="imgUrl" alt=" " />
+      <img :src="poster" alt=" " />
     </div>
     <div class="film-infos">
       <div class="top-level">
@@ -20,6 +20,7 @@ export default {
     title: String(),
     resume: String(),
     sideText: String(),
+    poster: String(),
   },
 };
 </script>
@@ -31,15 +32,16 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  box-shadow: 0px 0px 4px 4px #00000025;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
   height: 304px;
   gap: 1em;
   cursor: pointer;
+  transition: all ease-out 0.2s;
 }
 
 .card:hover {
-  box-shadow: 0px 0px 6px 6px #00000025;
-  width: 226px;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+  transform: scale(1.05);
 }
 .film-infos {
   display: flex;
@@ -50,8 +52,10 @@ export default {
 }
 
 img {
-  width: 100%;
-  border: none !important;
+  width: inherit;
+  height: 152px;
+  border-radius: inherit;
+  border: none;
 }
 .img {
   height: 152px;

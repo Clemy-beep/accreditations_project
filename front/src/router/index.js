@@ -52,6 +52,23 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "film" */ "@/views/PinView.vue"),
   },
+  {
+    path: "/moderate-movies",
+    name: "moderate-movies",
+    component: () =>
+      import(
+        /* webpackChunkName: "moderate-movies" */
+        "@/views/ModerationView.vue"
+      ),
+  },
+  {
+    path: "/moderate-movies/:id",
+    name: "moderate-movie",
+    component: () =>
+      import(
+        /* webpackChunkName: "moderate-movie" */ "@/views/ModeratePinView.vue"
+      ),
+  },
 ];
 
 const router = createRouter({

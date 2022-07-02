@@ -3,7 +3,7 @@
     <img :src="imgURL" alt="avatar" id="avatar" />
     <div>
       <h1>{{ user.username }}</h1>
-      <p>{{ user.followersNum }} abonnés</p>
+      <p>{{ user._count.followedBy }} abonnés</p>
     </div>
     <BadgeComponent :text="user.role.toLowerCase()" />
   </div>
@@ -35,15 +35,11 @@ export default {
   created() {
     this.getimg();
     this.user = this.currentUser;
-    this.getFollowers();
   },
   methods: {
     ...mapActions(userStore, ["fetchAvatar", "fetchFollowers"]),
     getimg: async function () {
       this.imgURL = await this.fetchAvatar(this.currentUser.id);
-    },
-    getFollowers: async function () {
-      this.fetchFollowers(this.currentUser.id);
     },
   },
 };

@@ -13,12 +13,13 @@ export default {
 <style scoped>
 div {
   height: 38px;
-  padding: 0 0.5em;
+  padding: 0.2em 0.5em;
   background: linear-gradient(#dac8fe, #f8ddff);
-  font-size: 18px;
+  font-size: 16px;
   font-family: "Montserrat", sans-serif;
   border-radius: 32px;
   text-align: center;
   line-height: 38px;
+  width: fit-content;
 }
 </style>
